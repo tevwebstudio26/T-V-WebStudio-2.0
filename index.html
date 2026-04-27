@@ -1142,9 +1142,9 @@ window.addEventListener('scroll',()=>{
 
 /* ══════════════════════════════════════
    DESKTOP ENHANCEMENTS
-   Tutto il resto parte solo se schermo >= 768px
+   Usa matchMedia — sincronizzato col meta viewport, non con innerWidth
 ══════════════════════════════════════ */
-if(window.innerWidth>=768){
+if(window.matchMedia('(min-width:768px)').matches){
 
   /* Mostra sezione processo desktop, nascondi mobile */
   const pm=document.querySelector('.process-mobile');
