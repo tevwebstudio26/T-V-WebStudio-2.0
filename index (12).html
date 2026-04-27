@@ -1,0 +1,965 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>T&V Web Studio — Siti Web e Landing Page su misura</title>
+  <meta name="description" content="Studio freelance di design e sviluppo web. Codice HTML puro, zero WordPress, zero template. Siti veloci, sicuri e costruiti per convertire."/>
+  <link rel="canonical" href="https://www.tevwebstudio.it/"/>
+  <meta property="og:title" content="T&V Web Studio — Siti Web e Landing Page su misura"/>
+  <meta property="og:description" content="Codice scritto a mano, design di livello. Niente WordPress, niente template, nessuna sorpresa."/>
+  <meta property="og:type" content="website"/>
+  <meta property="og:locale" content="it_IT"/>
+  <meta property="og:url" content="https://www.tevwebstudio.it/"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Sora:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#000;--text:#fff;
+  --muted:rgba(255,255,255,.42);
+  --faint:rgba(255,255,255,.08);
+  --y:#f0e44a;
+}
+html{scroll-behavior:smooth}
+body{
+  background:var(--bg);color:var(--text);
+  font-family:'Sora',sans-serif;
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;cursor:none;
+}
+
+/* ── GRAIN ── */
+body::after{
+  content:'';position:fixed;inset:0;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  opacity:.025;pointer-events:none;z-index:9000;
+  animation:grain 1.4s steps(2) infinite;
+}
+@keyframes grain{0%{transform:translate(0,0)}33%{transform:translate(-2%,-1%)}66%{transform:translate(1%,2%)}100%{transform:translate(-1%,-2%)}}
+
+/* ── SCROLL PROGRESS ── */
+#sp{position:fixed;top:0;left:0;height:1.5px;width:0%;z-index:9990;pointer-events:none;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.9) 30%,var(--y) 70%,transparent)}
+
+/* ── CURSOR ── */
+#cur-dot{width:5px;height:5px;background:#fff;border-radius:50%;position:fixed;top:0;left:0;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);mix-blend-mode:difference}
+#cur-ring{
+  width:38px;height:38px;border:1px solid rgba(255,255,255,.45);border-radius:50%;
+  position:fixed;top:0;left:0;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);
+  transition:width .35s cubic-bezier(.4,0,.2,1),height .35s,border-color .35s,background .35s;
+  display:flex;align-items:center;justify-content:center;
+}
+#cur-txt{font-size:.42rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#fff;opacity:0;transition:opacity .2s;white-space:nowrap;pointer-events:none;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%)}
+#cur-ring.exp{width:70px;height:70px;background:rgba(255,255,255,.05);border-color:rgba(255,255,255,.25)}
+#cur-ring.exp #cur-txt{opacity:1}
+@media(hover:none){#cur-dot,#cur-ring{display:none}}
+
+/* ══════════════════════════════════════
+   NAV — icone SVG inline
+══════════════════════════════════════ */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:1000;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:28px 48px;
+  transition:background .5s,backdrop-filter .5s,padding .4s;
+}
+nav.scrolled{background:rgba(0,0,0,.82);backdrop-filter:blur(24px);padding:18px 48px;border-bottom:1px solid var(--faint)}
+.nav-logo img{height:26px;filter:invert(1);display:block;transition:opacity .3s}
+.nav-logo img:hover{opacity:.65}
+
+/* Nav icone */
+.nav-icons{display:flex;gap:8px;align-items:center}
+.nav-icon-btn{
+  width:40px;height:40px;display:flex;align-items:center;justify-content:center;
+  border-radius:10px;text-decoration:none;position:relative;
+  transition:background .25s;
+}
+.nav-icon-btn:hover{background:rgba(255,255,255,.06)}
+.nav-icon-btn svg{width:18px;height:18px;stroke:rgba(255,255,255,.45);fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;transition:stroke .25s}
+.nav-icon-btn:hover svg,.nav-icon-btn.active svg{stroke:var(--y)}
+
+/* Tooltip label sull'icona */
+.nav-icon-btn::after{
+  content:attr(data-tip);
+  position:absolute;bottom:-28px;left:50%;transform:translateX(-50%);
+  font-size:.5rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;
+  color:rgba(255,255,255,.4);white-space:nowrap;
+  opacity:0;transition:opacity .2s;pointer-events:none;
+}
+.nav-icon-btn:hover::after{opacity:1}
+
+.nav-cta{
+  font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+  color:#000;background:#fff;border:none;padding:10px 24px;border-radius:100px;
+  cursor:none;text-decoration:none;display:inline-block;
+  transition:transform .25s,box-shadow .25s,background .25s,color .25s;
+}
+.nav-cta:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(255,255,255,.14);background:var(--y);color:#000}
+@media(max-width:768px){
+  nav{padding:18px 20px}
+  nav.scrolled{padding:14px 20px}
+  .nav-icons{display:none}
+  .nav-cta{display:none}
+  .nav-icon-btn::after{display:none}
+}
+
+/* ══════════════════════════════════════
+   HERO
+══════════════════════════════════════ */
+#hero{position:relative;min-height:100svh;display:flex;flex-direction:column;justify-content:flex-end;padding:0 48px 80px;overflow:hidden}
+#hero-canvas{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+
+.hero-eyebrow{
+  font-size:.6rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--muted);margin-bottom:18px;z-index:2;position:relative;
+  display:flex;align-items:center;gap:12px;
+  opacity:0;animation:fadeUp .8s .1s forwards;
+}
+.hero-eyebrow::before{content:'';width:20px;height:1px;background:rgba(255,255,255,.28);display:inline-block}
+
+.hero-h1{
+  font-family:'Instrument Serif',serif;
+  font-size:clamp(3.6rem,10vw,8.5rem);
+  font-weight:400;line-height:.9;letter-spacing:-.03em;
+  position:relative;z-index:2;
+  opacity:0;animation:fadeUp .9s .28s forwards;
+}
+.hero-h1 em{font-style:italic;color:var(--y)}
+.hero-h1 .line2{display:block;margin-top:.06em}
+
+/* Scroll hint verticale */
+.scroll-hint{
+  position:absolute;bottom:88px;right:48px;z-index:10;
+  display:flex;flex-direction:column;align-items:center;gap:8px;
+  opacity:0;animation:fadeIn 1s 1.4s forwards;
+}
+.scroll-hint-line{width:1px;height:44px;background:linear-gradient(to bottom,rgba(255,255,255,.45),transparent);animation:scrollPulse 2s ease-in-out infinite}
+@keyframes scrollPulse{0%,100%{opacity:.4;transform:scaleY(1)}50%{opacity:.9;transform:scaleY(.6)}}
+.scroll-hint-label{font-size:.5rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:rgba(255,255,255,.3);writing-mode:vertical-rl}
+@keyframes fadeIn{to{opacity:1}}
+
+.hero-sub-row{
+  display:flex;align-items:flex-end;justify-content:space-between;
+  margin-top:52px;position:relative;z-index:2;gap:40px;
+  opacity:0;animation:fadeUp .9s .46s forwards;
+}
+.hero-sub{max-width:380px;font-size:.92rem;font-weight:400;line-height:1.85;color:var(--muted)}
+.hero-sub strong{color:#fff;font-weight:500}
+.hero-cta-group{display:flex;flex-direction:column;align-items:flex-end;gap:14px;flex-shrink:0}
+
+.btn-primary{
+  display:inline-flex;align-items:center;gap:10px;
+  background:#fff;color:#000;font-family:'Sora',sans-serif;
+  font-size:.75rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+  padding:16px 32px;border-radius:100px;text-decoration:none;border:none;cursor:none;
+  position:relative;overflow:hidden;transition:transform .3s,box-shadow .3s;
+}
+.btn-primary::before{content:'';position:absolute;inset:0;background:var(--y);transform:translateX(-101%);transition:transform .4s cubic-bezier(.4,0,.2,1)}
+.btn-primary:hover::before{transform:translateX(0)}
+.btn-primary:hover{transform:translateY(-3px);box-shadow:0 16px 40px rgba(240,228,74,.22);color:#000}
+.btn-primary span{position:relative;z-index:1}
+
+.btn-ghost{font-size:.68rem;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);text-decoration:none;transition:color .2s;display:flex;align-items:center;gap:8px}
+.btn-ghost .arr{display:inline-block;transition:transform .3s}
+.btn-ghost:hover{color:#fff}
+.btn-ghost:hover .arr{transform:translateY(4px)}
+
+@media(max-width:768px){
+  #hero{padding:0 20px 100px;min-height:100svh;justify-content:flex-end}
+  .scroll-hint{display:none}
+  .hero-eyebrow{font-size:.55rem;margin-bottom:14px}
+  .hero-h1{font-size:clamp(3rem,13vw,5rem)}
+  .hero-sub-row{flex-direction:column;align-items:flex-start;gap:24px;margin-top:32px}
+  .hero-cta-group{align-items:flex-start;width:100%}
+  .btn-primary{width:100%;justify-content:center}
+  .hero-sub{font-size:.85rem;max-width:100%}
+}
+@keyframes fadeUp{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:none}}
+
+/* ══════════════════════════════════════
+   TICKER MARQUEE
+══════════════════════════════════════ */
+.marquee-wrap{border-top:1px solid var(--faint);border-bottom:1px solid var(--faint);padding:13px 0;overflow:hidden;position:relative}
+.marquee-wrap::before,.marquee-wrap::after{content:'';position:absolute;top:0;bottom:0;width:120px;z-index:2;pointer-events:none}
+.marquee-wrap::before{left:0;background:linear-gradient(to right,#000,transparent)}
+.marquee-wrap::after{right:0;background:linear-gradient(to left,#000,transparent)}
+.marquee-inner{display:flex;width:max-content;animation:mq 32s linear infinite}
+.marquee-inner:hover{animation-play-state:paused}
+.marquee-item{display:flex;align-items:center;gap:30px;padding:0 30px;font-size:.58rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.2);white-space:nowrap}
+.mq-dot{color:var(--y);opacity:.55;font-size:.38rem}
+@keyframes mq{to{transform:translateX(-50%)}}
+
+/* ══════════════════════════════════════
+   SERVICES — BENTO
+══════════════════════════════════════ */
+#services{padding:100px 48px}
+.section-label{font-size:.58rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.26);margin-bottom:40px;display:flex;align-items:center;gap:10px}
+.section-label::before{content:'';display:inline-block;width:16px;height:1px;background:rgba(255,255,255,.18)}
+
+.bento{display:grid;grid-template-columns:repeat(12,1fr);gap:1px;background:var(--faint);border:1px solid var(--faint)}
+.bento-card{
+  background:#000;padding:40px 36px;display:flex;flex-direction:column;gap:14px;
+  position:relative;overflow:hidden;transition:background .35s;
+}
+.bento-card::after{content:'';position:absolute;inset:0;opacity:0;transition:opacity .35s;pointer-events:none;background:radial-gradient(circle at var(--mx,50%) var(--my,50%),rgba(255,255,255,.045) 0%,transparent 60%)}
+.bento-card:hover{background:rgba(255,255,255,.018)}
+.bento-card:hover::after{opacity:1}
+
+.bc-1{grid-column:1/8;grid-row:1;padding:56px 48px;background:#050505}
+.bc-2{grid-column:8/13;grid-row:1}
+.bc-3{grid-column:1/5;grid-row:2}
+.bc-4{grid-column:5/9;grid-row:2}
+.bc-5{grid-column:9/13;grid-row:2}
+.bc-1 .bento-ghost-num{font-size:5rem;font-family:'Instrument Serif',serif;font-weight:400;color:rgba(255,255,255,.04);line-height:1;position:absolute;bottom:20px;right:32px;letter-spacing:-.04em;user-select:none}
+
+.bento-tag{font-size:.52rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:rgba(255,255,255,.2)}
+.bento-title{font-family:'Instrument Serif',serif;font-size:1.5rem;font-weight:400;line-height:1.1;transition:transform .3s}
+.bc-1 .bento-title{font-size:clamp(1.8rem,2.8vw,2.4rem)}
+.bento-card:hover .bento-title{transform:translateX(5px)}
+.bento-desc{font-size:.78rem;line-height:1.78;color:var(--muted);flex:1}
+.bento-price{font-size:.63rem;font-weight:600;letter-spacing:.1em;color:rgba(255,255,255,.22);border-top:1px solid var(--faint);padding-top:15px;margin-top:4px;display:flex;justify-content:space-between;align-items:center}
+.bento-arr{opacity:.28;transition:transform .3s,opacity .3s}
+.bento-card:hover .bento-arr{transform:translateX(5px);opacity:.75}
+
+.bento-cta-bar{grid-column:1/13;grid-row:3;background:#000;display:flex;align-items:center;justify-content:space-between;padding:28px 48px;gap:24px;flex-wrap:wrap}
+.bento-cta-bar p{font-size:.78rem;color:rgba(255,255,255,.32);font-weight:400}
+.bento-cta-bar strong{color:#fff}
+
+@media(max-width:1024px){.bc-1{grid-column:1/13}.bc-2{grid-column:1/13;grid-row:2}.bc-3{grid-column:1/7;grid-row:3}.bc-4{grid-column:7/13;grid-row:3}.bc-5{grid-column:1/13;grid-row:4}.bento-cta-bar{grid-row:5}}
+@media(max-width:600px){.bc-1,.bc-2,.bc-3,.bc-4,.bc-5{grid-column:1/13}.bc-2{grid-row:2}.bc-3{grid-row:3}.bc-4{grid-row:4}.bc-5{grid-row:5}.bento-cta-bar{grid-row:6;flex-direction:column;align-items:flex-start}#services{padding:72px 24px}.bento-card{padding:32px 24px}.bc-1{padding:40px 28px}}
+
+/* ══════════════════════════════════════
+   HORIZONTAL SCROLL — processo
+══════════════════════════════════════ */
+#process-wrap{position:relative;height:300vh}
+#process-sticky{position:sticky;top:0;height:100svh;overflow:hidden;display:flex;flex-direction:column;justify-content:center}
+.process-head{padding:0 48px;margin-bottom:44px;display:flex;align-items:center;gap:24px;flex-shrink:0}
+.process-head .section-label{margin-bottom:0}
+.pbar-wrap{flex:1;height:1px;background:var(--faint);position:relative;max-width:180px}
+.pbar-fill{position:absolute;top:0;left:0;height:100%;background:var(--y);width:0%;transition:width .08s linear}
+.process-track{display:flex;padding:0 48px;will-change:transform}
+.pc{
+  flex-shrink:0;width:min(480px,78vw);padding:48px 44px;margin-right:1px;
+  background:#060606;border:1px solid var(--faint);
+  display:flex;flex-direction:column;gap:18px;position:relative;overflow:hidden;
+}
+.pc::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.1),transparent)}
+.pc-n{font-size:.56rem;font-weight:700;letter-spacing:.18em;color:rgba(255,255,255,.2)}
+.pc-ghost{font-family:'Instrument Serif',serif;font-size:clamp(5rem,9vw,8rem);font-weight:400;color:rgba(255,255,255,.05);line-height:1;position:absolute;bottom:20px;right:28px;letter-spacing:-.04em;user-select:none}
+.pc-title{font-family:'Instrument Serif',serif;font-size:clamp(1.4rem,2.5vw,1.9rem);font-weight:400;line-height:1.1}
+.pc-desc{font-size:.82rem;line-height:1.78;color:var(--muted);max-width:340px}
+.pc-note{font-size:.68rem;color:rgba(255,255,255,.2);font-style:italic;border-left:1px solid var(--faint);padding-left:12px}
+@media(max-width:768px){#process-wrap{height:260vh}.process-head{padding:0 20px}.process-track{padding:0 20px}.pc{width:min(340px,85vw);padding:36px 28px}}
+@media(max-width:900px){.stats-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:480px){.stats-grid{grid-template-columns:1fr}#stats{padding:60px 20px}.stat-item{padding:32px 20px}}
+@media(max-width:768px){.portfolio-grid{grid-template-columns:1fr}#portfolio{padding:60px 20px}}
+@media(max-width:1024px){.portfolio-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:600px){#services{padding:60px 20px}.bento-card{padding:28px 20px}.bc-1{padding:36px 24px}.bento-cta-bar{padding:24px 20px;flex-direction:column;align-items:flex-start}.bento-cta-bar .btn-primary{width:100%;justify-content:center}}
+@media(max-width:768px){#manifesto{grid-template-columns:1fr;gap:40px;padding:70px 20px}.manifesto-h2{position:static;font-size:clamp(1.9rem,7vw,2.8rem)}}
+@media(max-width:768px){#contact{padding:80px 20px}}
+@media(max-width:600px){footer{flex-direction:column;align-items:flex-start;padding:28px 20px;gap:16px}.footer-links{flex-wrap:wrap;gap:16px}}
+
+/* ══════════════════════════════════════
+   MANIFESTO — clip-path reveal
+══════════════════════════════════════ */
+#manifesto{padding:120px 48px;display:grid;grid-template-columns:1fr 1fr;gap:90px;align-items:start;position:relative;overflow:hidden}
+.manifesto-bg{position:absolute;right:-30px;top:50px;font-family:'Instrument Serif',serif;font-size:clamp(8rem,18vw,15rem);font-weight:400;font-style:italic;color:rgba(255,255,255,.018);line-height:1;pointer-events:none;user-select:none;white-space:nowrap}
+.manifesto-h2{font-family:'Instrument Serif',serif;font-size:clamp(2.1rem,4.2vw,3.6rem);font-weight:400;line-height:1.08;letter-spacing:-.02em;position:sticky;top:120px}
+.manifesto-h2 em{font-style:italic}
+.m-underline{display:inline-block;background:linear-gradient(90deg,var(--y),var(--y)) no-repeat 0 100%;background-size:0% 1.5px;transition:background-size 1.2s ease}
+.manifesto-h2.in .m-underline{background-size:100% 1.5px}
+.manifesto-body{display:flex;flex-direction:column}
+.m-pt{padding:30px 0;border-bottom:1px solid var(--faint);position:relative;overflow:hidden;clip-path:inset(0 0 100% 0);transition:clip-path .85s cubic-bezier(.4,0,.2,1)}
+.m-pt.in{clip-path:inset(0 0 0% 0)}
+.m-pt::after{content:'';position:absolute;bottom:-1px;left:0;width:0;height:1px;background:var(--y);transition:width .7s cubic-bezier(.4,0,.2,1)}
+.m-pt:hover::after{width:100%}
+.m-num{font-size:.52rem;font-weight:700;letter-spacing:.18em;color:rgba(255,255,255,.18);margin-bottom:8px}
+.m-title{font-size:.82rem;font-weight:600;letter-spacing:.04em;margin-bottom:9px;transition:transform .3s}
+.m-pt:hover .m-title{transform:translateX(7px)}
+.m-text{font-size:.82rem;line-height:1.78;color:var(--muted)}
+@media(max-width:900px){#manifesto{grid-template-columns:1fr;gap:48px;padding:80px 24px}.manifesto-h2{position:static}}
+
+/* ══════════════════════════════════════
+   PORTFOLIO PLACEHOLDER
+══════════════════════════════════════ */
+#portfolio{padding:100px 48px;border-top:1px solid var(--faint)}
+.portfolio-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--faint);border:1px solid var(--faint);margin-top:40px}
+.portfolio-card{
+  background:#000;aspect-ratio:4/3;position:relative;overflow:hidden;
+  display:flex;align-items:flex-end;padding:24px;
+  transition:background .35s;
+}
+.portfolio-card::before{content:'';position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.7) 0%,transparent 60%);z-index:1}
+/* Animated placeholder pattern */
+.portfolio-card-bg{
+  position:absolute;inset:0;
+  background:repeating-linear-gradient(
+    45deg,
+    rgba(255,255,255,.018) 0px,
+    rgba(255,255,255,.018) 1px,
+    transparent 1px,
+    transparent 14px
+  );
+  animation:bgShift 8s linear infinite;
+}
+@keyframes bgShift{to{background-position:40px 40px}}
+.portfolio-card:hover .portfolio-card-bg{opacity:.6}
+.portfolio-card-inner{position:relative;z-index:2;display:flex;flex-direction:column;gap:4px}
+.portfolio-tag{font-size:.52rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:rgba(255,255,255,.4)}
+.portfolio-title{font-family:'Instrument Serif',serif;font-size:1.1rem;font-weight:400;color:rgba(255,255,255,.5)}
+.portfolio-soon{
+  position:absolute;top:20px;right:20px;z-index:2;
+  font-size:.5rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;
+  color:#000;background:var(--y);padding:4px 10px;border-radius:100px;
+}
+@media(max-width:768px){.portfolio-grid{grid-template-columns:1fr}}
+@media(max-width:1024px){.portfolio-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:600px){#portfolio{padding:72px 24px}}
+
+/* ══════════════════════════════════════
+   STATS
+══════════════════════════════════════ */
+#stats{padding:100px 48px;border-top:1px solid var(--faint)}
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--faint);border:1px solid var(--faint)}
+.stat-item{background:#000;padding:48px 36px;display:flex;flex-direction:column;gap:8px;position:relative;overflow:hidden;transition:background .35s}
+.stat-item::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(240,228,74,.03) 0%,transparent 60%);opacity:0;transition:opacity .4s}
+.stat-item:hover{background:rgba(255,255,255,.012)}
+.stat-item:hover::before{opacity:1}
+.stat-val{font-family:'Instrument Serif',serif;font-size:clamp(2.2rem,4.5vw,3.5rem);font-weight:400;line-height:1;letter-spacing:-.02em}
+.stat-unit{font-size:.38em;font-family:'Sora',sans-serif;font-weight:600;color:var(--muted);letter-spacing:.06em;margin-left:2px}
+.stat-label{font-size:.6rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.stat-sub{font-size:.68rem;color:rgba(255,255,255,.2);line-height:1.6;margin-top:3px}
+@media(max-width:900px){.stats-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:480px){.stats-grid{grid-template-columns:1fr}#stats{padding:72px 24px}.stat-item{padding:32px 24px}}
+
+/* ══════════════════════════════════════
+   CONTACT CTA
+══════════════════════════════════════ */
+#contact{padding:140px 48px;text-align:center;position:relative;overflow:hidden;min-height:58vh;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#cc{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.ct-label{font-size:.6rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.26);margin-bottom:26px;position:relative;z-index:2}
+.ct-h2{font-family:'Instrument Serif',serif;font-size:clamp(2.8rem,7.5vw,6rem);font-weight:400;line-height:1;letter-spacing:-.03em;margin-bottom:52px;position:relative;z-index:2}
+.ct-h2 em{font-style:italic}
+.ct-actions{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;position:relative;z-index:2}
+.btn-outline{display:inline-flex;align-items:center;gap:8px;background:transparent;color:#fff;font-family:'Sora',sans-serif;font-size:.75rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;padding:15px 30px;border-radius:100px;text-decoration:none;border:1px solid rgba(255,255,255,.2);cursor:none;transition:border-color .3s,background .3s,transform .3s}
+.btn-outline:hover{border-color:rgba(255,255,255,.6);background:rgba(255,255,255,.04);transform:translateY(-2px)}
+@media(max-width:768px){#contact{padding:100px 24px}}
+
+/* ══════════════════════════════════════
+   FOOTER
+══════════════════════════════════════ */
+footer{border-top:1px solid var(--faint);padding:40px 48px;display:flex;align-items:center;justify-content:space-between;gap:24px;flex-wrap:wrap}
+.footer-brand{font-family:'Instrument Serif',serif;font-size:1rem;font-style:italic;color:rgba(255,255,255,.38)}
+.footer-copy{font-size:.6rem;color:rgba(255,255,255,.2);letter-spacing:.06em}
+.footer-links{display:flex;gap:24px;list-style:none}
+.footer-links a{font-size:.62rem;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.28);text-decoration:none;transition:color .2s}
+.footer-links a:hover{color:#fff}
+@media(max-width:600px){footer{flex-direction:column;align-items:flex-start;padding:30px 24px}}
+
+/* ══════════════════════════════════════
+   BOTTOM NAV — mobile
+══════════════════════════════════════ */
+.bnav{display:none;position:fixed;bottom:0;left:0;right:0;z-index:900;background:rgba(0,0,0,.92);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-top:1px solid var(--faint);padding:10px 0 max(12px,env(safe-area-inset-bottom));justify-content:space-around;align-items:center}
+.bn-item{display:flex;flex-direction:column;align-items:center;gap:3px;color:rgba(255,255,255,.35);text-decoration:none;font-size:.46rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;transition:color .2s;padding:4px 10px;min-width:60px}
+.bn-item svg{width:20px;height:20px;stroke:rgba(255,255,255,.35);fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;transition:stroke .25s;margin-bottom:1px}
+.bn-item:hover,.bn-item.active{color:var(--y)}
+.bn-item:hover svg,.bn-item.active svg{stroke:var(--y)}
+@media(max-width:768px){.bnav{display:flex}body{padding-bottom:80px}}
+
+/* ── REVEAL ── */
+.rv{opacity:0;transform:translateY(24px);transition:opacity .8s cubic-bezier(.4,0,.2,1),transform .8s cubic-bezier(.4,0,.2,1)}
+.rv.in{opacity:1;transform:none}
+.rv[data-d="1"]{transition-delay:.1s}.rv[data-d="2"]{transition-delay:.2s}
+.rv[data-d="3"]{transition-delay:.3s}.rv[data-d="4"]{transition-delay:.4s}
+
+/* ── MAGNETIC ── */
+.mag{display:inline-block;transition:transform .4s cubic-bezier(.4,0,.2,1)}
+
+/* ══════════════════════════════════════
+   CHICCA: glitch effect sul titolo hero
+   si attiva una volta ogni ~8s
+══════════════════════════════════════ */
+@keyframes glitch1{
+  0%,95%,100%{clip-path:inset(0 0 100% 0);transform:none}
+  96%{clip-path:inset(18% 0 64% 0);transform:translateX(-4px)}
+  97%{clip-path:inset(52% 0 22% 0);transform:translateX(4px)}
+  98%{clip-path:inset(30% 0 48% 0);transform:translateX(-2px)}
+  99%{clip-path:inset(0 0 0 0);transform:none}
+}
+@keyframes glitch2{
+  0%,95%,100%{clip-path:inset(0 0 100% 0);transform:none;opacity:0}
+  96%{clip-path:inset(60% 0 20% 0);transform:translateX(6px);opacity:.6}
+  97%{clip-path:inset(20% 0 60% 0);transform:translateX(-3px);opacity:.4}
+  98%{clip-path:inset(40% 0 40% 0);transform:translateX(2px);opacity:.3}
+  99%{opacity:0}
+}
+.hero-h1-wrap{position:relative;display:inline-block}
+.hero-glitch-a{
+  position:absolute;top:0;left:0;color:rgba(240,228,74,.5);
+  font-family:'Instrument Serif',serif;font-size:inherit;font-weight:400;line-height:.9;letter-spacing:-.03em;
+  pointer-events:none;user-select:none;
+  animation:glitch1 8s steps(1) infinite;
+}
+.hero-glitch-b{
+  position:absolute;top:0;left:0;color:rgba(255,100,100,.4);
+  font-family:'Instrument Serif',serif;font-size:inherit;font-weight:400;line-height:.9;letter-spacing:-.03em;
+  pointer-events:none;user-select:none;
+  animation:glitch2 8s steps(1) 0.2s infinite;
+}
+</style>
+</head>
+<body>
+
+<div id="cur-dot"></div>
+<div id="cur-ring"><span id="cur-txt"></span></div>
+<div id="sp"></div>
+
+<!-- ── NAV ── -->
+<nav id="nav">
+  <a class="nav-logo" href="/">
+    <img src="https://i.ibb.co/hRpvP1R3/l.webp" alt="T&V Web Studio" width="110" height="26"/>
+  </a>
+
+  <div class="nav-icons">
+    <!-- Servizi -->
+    <a class="nav-icon-btn" href="#services" data-tip="Servizi">
+      <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+    </a>
+    <!-- Processo -->
+    <a class="nav-icon-btn" href="#process-wrap" data-tip="Metodo">
+      <svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+    </a>
+    <!-- Manifesto -->
+    <a class="nav-icon-btn" href="#manifesto" data-tip="Studio">
+      <svg viewBox="0 0 24 24"><line x1="4" y1="6" x2="20" y2="6"/><line x1="4" y1="12" x2="14" y2="12"/><line x1="4" y1="18" x2="17" y2="18"/></svg>
+    </a>
+    <!-- Portfolio -->
+    <a class="nav-icon-btn" href="#portfolio" data-tip="Lavori">
+      <svg viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg>
+    </a>
+    <!-- Contatti -->
+    <a class="nav-icon-btn" href="#contact" data-tip="Contatti">
+      <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+    </a>
+  </div>
+
+  <div class="mag">
+    <a class="nav-cta" href="mailto:infotev@tevwebstudio.it">Parliamo →</a>
+  </div>
+</nav>
+
+<!-- ── HERO ── -->
+<section id="hero">
+  <canvas id="hero-canvas"></canvas>
+
+  <div class="scroll-hint">
+    <div class="scroll-hint-line"></div>
+    <span class="scroll-hint-label">Scroll</span>
+  </div>
+
+  <p class="hero-eyebrow">T&amp;V Web Studio &mdash; Rieti, ovunque</p>
+
+  <h1 class="hero-h1">
+    <span class="hero-h1-wrap">
+      <span id="scramble-title">Il web</span>
+      <span class="hero-glitch-a" aria-hidden="true">Il web</span>
+      <span class="hero-glitch-b" aria-hidden="true">Il web</span>
+    </span>
+    <span class="line2">come <em>dovrebbe essere.</em></span>
+  </h1>
+
+  <div class="hero-sub-row">
+    <p class="hero-sub">
+      Abbiamo lavorato anni per aziende che ci chiedevano siti belli
+      — e li vedevano diventare lenti, insicuri, pieni di plugin inutili.
+      Così abbiamo smesso di usare WordPress.<br/><br/>
+      <strong>T&V</strong> fa siti in codice puro: più veloci, più sicuri,
+      senza limiti. Da Rieti, per chiunque.
+    </p>
+    <div class="hero-cta-group">
+      <div class="mag">
+        <a class="btn-primary" href="mailto:infotev@tevwebstudio.it">
+          <span>Raccontaci il tuo progetto →</span>
+        </a>
+      </div>
+      <a class="btn-ghost" href="#services">Cosa facciamo <span class="arr">↓</span></a>
+    </div>
+  </div>
+</section>
+
+<!-- ── MARQUEE ── -->
+<div class="marquee-wrap">
+  <div class="marquee-inner">
+    <div class="marquee-item">HTML puro <span class="mq-dot">✦</span> Zero WordPress <span class="mq-dot">✦</span> Landing Page <span class="mq-dot">✦</span> SEO Locale <span class="mq-dot">✦</span> Mobile First <span class="mq-dot">✦</span> Veloci per davvero <span class="mq-dot">✦</span> Codice tuo per sempre <span class="mq-dot">✦</span> Nessuna sorpresa <span class="mq-dot">✦</span></div>
+    <div class="marquee-item">HTML puro <span class="mq-dot">✦</span> Zero WordPress <span class="mq-dot">✦</span> Landing Page <span class="mq-dot">✦</span> SEO Locale <span class="mq-dot">✦</span> Mobile First <span class="mq-dot">✦</span> Veloci per davvero <span class="mq-dot">✦</span> Codice tuo per sempre <span class="mq-dot">✦</span> Nessuna sorpresa <span class="mq-dot">✦</span></div>
+  </div>
+</div>
+
+<!-- ── SERVICES ── -->
+<section id="services">
+  <p class="section-label rv">Cosa costruiamo</p>
+  <div class="bento">
+
+    <div class="bento-card bc-1 rv" data-d="1">
+      <span class="bento-ghost-num">01</span>
+      <span class="bento-tag">Il più richiesto</span>
+      <h3 class="bento-title">Landing Page<br/>ad alta conversione</h3>
+      <p class="bento-desc">Una pagina, un obiettivo. Struttura, copy e CTA pensati per trasformare il traffico da Meta Ads o Google in contatti reali. Niente distrazioni, niente WordPress che rallenta al momento sbagliato.</p>
+      <span class="bento-price">da 490 € <span class="bento-arr">→</span></span>
+    </div>
+
+    <div class="bento-card bc-2 rv" data-d="2">
+      <span class="bento-tag">La tua presenza online</span>
+      <h3 class="bento-title">Sito Vetrina</h3>
+      <p class="bento-desc">Design su misura, velocità reale, ottimizzato per Google. Il tuo sito non si rompe, non si hacchera, non ti sorprende con la bolletta di rinnovo plugin.</p>
+      <span class="bento-price">da 890 € <span class="bento-arr">→</span></span>
+    </div>
+
+    <div class="bento-card bc-3 rv" data-d="1">
+      <span class="bento-tag">Visibilità locale</span>
+      <h3 class="bento-title">SEO Locale</h3>
+      <p class="bento-desc">Google Business Profile, keyword della tua zona, Core Web Vitals. Trovato quando serve, dove serve.</p>
+      <span class="bento-price">da 290 € <span class="bento-arr">→</span></span>
+    </div>
+
+    <div class="bento-card bc-4 rv" data-d="2">
+      <span class="bento-tag">Diagnosi onesta</span>
+      <h3 class="bento-title">Audit &amp; Consulenza</h3>
+      <p class="bento-desc">Ti diciamo esattamente cosa non va nel tuo sito — e perché. Report scritto, nessun giro di parole.</p>
+      <span class="bento-price">da 190 € <span class="bento-arr">→</span></span>
+    </div>
+
+    <div class="bento-card bc-5 rv" data-d="3">
+      <span class="bento-tag">Continuità</span>
+      <h3 class="bento-title">Manutenzione</h3>
+      <p class="bento-desc">Modifiche, aggiornamenti, supporto mensile. Tu pensi al business, noi teniamo il sito in ordine.</p>
+      <span class="bento-price">da 80 €/mese <span class="bento-arr">→</span></span>
+    </div>
+
+    <div class="bento-card bento-cta-bar rv">
+      <p>Hai un progetto? <strong>Parliamo, senza impegno.</strong></p>
+      <div class="mag">
+        <a class="btn-primary" href="mailto:infotev@tevwebstudio.it"><span>Scrivici →</span></a>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ── PROCESS HORIZONTAL SCROLL ── -->
+<div id="process-wrap">
+  <div id="process-sticky">
+    <div class="process-head">
+      <p class="section-label" style="margin-bottom:0">Come lavoriamo</p>
+      <div class="pbar-wrap"><div class="pbar-fill" id="pbar"></div></div>
+    </div>
+    <div class="process-track" id="ptrack">
+
+      <div class="pc">
+        <span class="pc-n">Step 01 / 03</span>
+        <h3 class="pc-title">Ti ascoltiamo.<br/>Davvero.</h3>
+        <p class="pc-desc">Una call gratuita per capire il tuo business, i tuoi clienti e cosa vuoi ottenere. Nessun modulo da compilare, nessun commerciale in mezzo.</p>
+        <p class="pc-note">30–45 min · Gratuita · Senza impegno</p>
+        <span class="pc-ghost">01</span>
+      </div>
+
+      <div class="pc">
+        <span class="pc-n">Step 02 / 03</span>
+        <h3 class="pc-title">Costruiamo<br/>insieme.</h3>
+        <p class="pc-desc">Design e sviluppo con revisioni condivise. Vedi ogni step prima che diventi definitivo. Il tuo feedback cambia le cose in tempo reale.</p>
+        <p class="pc-note">Revisioni illimitate · Anteprima condivisa · Consegna in 3 settimane</p>
+        <span class="pc-ghost">02</span>
+      </div>
+
+      <div class="pc">
+        <span class="pc-n">Step 03 / 03</span>
+        <h3 class="pc-title">Online.<br/>E non ci sparisce.</h3>
+        <p class="pc-desc">Pubblichiamo, monitoriamo, siamo disponibili. Il progetto non finisce al lancio — siamo lì per ogni modifica futura. Il codice è tuo per sempre.</p>
+        <p class="pc-note">Consegna codice sorgente · Supporto incluso</p>
+        <span class="pc-ghost">03</span>
+      </div>
+
+      <div class="pc" style="background:rgba(240,228,74,.03);border-color:rgba(240,228,74,.1)">
+        <span class="pc-n" style="color:rgba(240,228,74,.35)">Pronto?</span>
+        <h3 class="pc-title">Tre step.<br/><em style="font-style:italic;color:var(--y)">Zero sorprese.</em></h3>
+        <p class="pc-desc">Preventivo fisso, consegna in tempi certi, risposta in 24 ore. Lavoriamo da remoto — ovunque tu sia in Italia.</p>
+        <div class="mag" style="margin-top:auto">
+          <a class="btn-primary" href="mailto:infotev@tevwebstudio.it"><span>Iniziamo →</span></a>
+        </div>
+        <span class="pc-ghost" style="color:rgba(240,228,74,.04)">→</span>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ── MANIFESTO ── -->
+<section id="manifesto">
+  <div class="manifesto-bg" aria-hidden="true">Studio</div>
+  <h2 class="manifesto-h2 rv">
+    Niente template.<br/>
+    Niente <em>intermediari.</em><br/>
+    <span class="m-underline">Solo codice.</span>
+  </h2>
+  <div class="manifesto-body">
+    <div class="m-pt">
+      <p class="m-num">— 01</p>
+      <p class="m-title">Perché HTML puro e non WordPress</p>
+      <p class="m-text">WordPress è ottimo per chi vuole gestire i contenuti da solo. Ma se il tuo sito deve essere veloce, sicuro e non rompersi ogni aggiornamento di plugin, il codice scritto a mano non ha rivali. Ogni riga è nostra — e alla consegna diventa tua.</p>
+    </div>
+    <div class="m-pt">
+      <p class="m-num">— 02</p>
+      <p class="m-title">Il sito che converte non è solo bello</p>
+      <p class="m-text">Un sito esteticamente perfetto che non porta contatti è un costo, non un investimento. Ogni scelta che facciamo — struttura, copy, CTA, velocità — serve un obiettivo misurabile. Il design segue la strategia, non il contrario.</p>
+    </div>
+    <div class="m-pt">
+      <p class="m-num">— 03</p>
+      <p class="m-title">Parli con chi fa il lavoro</p>
+      <p class="m-text">Nessun account manager, nessun commerciale. Dalla prima call alla consegna, parli direttamente con noi. Rispondiamo entro 24 ore, sempre. Lavoriamo da remoto — questo non cambia niente sulla qualità, ma abbassa i costi per te.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ── PORTFOLIO PLACEHOLDER ── -->
+<section id="portfolio">
+  <p class="section-label rv">Lavori recenti</p>
+  <div class="portfolio-grid">
+
+    <div class="portfolio-card rv" data-d="1">
+      <div class="portfolio-card-bg"></div>
+      <span class="portfolio-soon">In arrivo</span>
+      <div class="portfolio-card-inner">
+        <span class="portfolio-tag">Sito Vetrina</span>
+        <span class="portfolio-title">Settore Immobiliare</span>
+      </div>
+    </div>
+
+    <div class="portfolio-card rv" data-d="2">
+      <div class="portfolio-card-bg"></div>
+      <span class="portfolio-soon">In arrivo</span>
+      <div class="portfolio-card-inner">
+        <span class="portfolio-tag">Landing Page</span>
+        <span class="portfolio-title">Servizi Professionali</span>
+      </div>
+    </div>
+
+    <div class="portfolio-card rv" data-d="3">
+      <div class="portfolio-card-bg"></div>
+      <span class="portfolio-soon">In arrivo</span>
+      <div class="portfolio-card-inner">
+        <span class="portfolio-tag">Sito Vetrina + SEO</span>
+        <span class="portfolio-title">Attività Locale</span>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ── STATS ── -->
+<section id="stats">
+  <p class="section-label rv">In numeri</p>
+  <div class="stats-grid">
+    <div class="stat-item rv" data-d="1">
+      <div class="stat-val"><span class="count" data-target="3">0</span><span class="stat-unit">sett.</span></div>
+      <div class="stat-label">Consegna media</div>
+      <div class="stat-sub">Dalla prima call al sito live.</div>
+    </div>
+    <div class="stat-item rv" data-d="2">
+      <div class="stat-val"><span class="count" data-target="100">0</span><span class="stat-unit">%</span></div>
+      <div class="stat-label">Codice tuo</div>
+      <div class="stat-sub">Il sorgente è sempre tuo. Sempre.</div>
+    </div>
+    <div class="stat-item rv" data-d="3">
+      <div class="stat-val"><span class="count" data-target="24">0</span><span class="stat-unit">h</span></div>
+      <div class="stat-label">Risposta garantita</div>
+      <div class="stat-sub">Nessun ticket, nessuna attesa.</div>
+    </div>
+    <div class="stat-item rv" data-d="4">
+      <div class="stat-val" style="color:var(--y)">Zero</div>
+      <div class="stat-label">Sorprese in fattura</div>
+      <div class="stat-sub">Preventivo fisso. Nessun extra.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ── CTA CONTACT ── -->
+<section id="contact">
+  <canvas id="cc"></canvas>
+  <p class="ct-label rv">Nuovo progetto</p>
+  <h2 class="ct-h2 rv">
+    Facciamo una<br/><em>chiacchierata.</em>
+  </h2>
+  <div class="ct-actions rv">
+    <div class="mag">
+      <a class="btn-primary" href="mailto:infotev@tevwebstudio.it">
+        <span>Scrivici una mail →</span>
+      </a>
+    </div>
+    <div class="mag">
+      <a class="btn-outline" href="https://wa.me/393474923930">WhatsApp</a>
+    </div>
+  </div>
+</section>
+
+<!-- ── FOOTER ── -->
+<footer>
+  <span class="footer-brand">T&amp;V Web Studio</span>
+  <ul class="footer-links">
+    <li><a href="#services">Servizi</a></li>
+    <li><a href="#manifesto">Studio</a></li>
+    <li><a href="#portfolio">Lavori</a></li>
+    <li><a href="mailto:infotev@tevwebstudio.it">Contatti</a></li>
+  </ul>
+  <span class="footer-copy">&copy; 2026 tevwebstudio.it</span>
+</footer>
+
+<!-- ── BOTTOM NAV mobile ── -->
+<nav class="bnav" id="bnav">
+  <a class="bn-item active" href="#hero">
+    <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+    Home
+  </a>
+  <a class="bn-item" href="#services">
+    <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+    Servizi
+  </a>
+  <a class="bn-item" href="#portfolio">
+    <svg viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg>
+    Lavori
+  </a>
+  <a class="bn-item" href="#contact">
+    <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+    Contatto
+  </a>
+</nav>
+
+<script>
+/* ── CURSOR ── */
+const dot=document.getElementById('cur-dot');
+const ring=document.getElementById('cur-ring');
+const ctxt=document.getElementById('cur-txt');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY});
+
+function curLabel(t){ctxt.textContent=t||'';ring.classList.toggle('exp',!!t)}
+document.querySelectorAll('.bento-card[class*="bc-"]').forEach(el=>{el.addEventListener('mouseenter',()=>curLabel('Scopri'));el.addEventListener('mouseleave',()=>curLabel(''))});
+document.querySelectorAll('.btn-primary').forEach(el=>{el.addEventListener('mouseenter',()=>curLabel('Go'));el.addEventListener('mouseleave',()=>curLabel(''))});
+document.querySelectorAll('.portfolio-card').forEach(el=>{el.addEventListener('mouseenter',()=>curLabel('Soon'));el.addEventListener('mouseleave',()=>curLabel(''))});
+
+document.querySelectorAll('a,button').forEach(el=>{
+  el.addEventListener('mouseenter',()=>{ring.style.width='52px';ring.style.height='52px'});
+  el.addEventListener('mouseleave',()=>{if(!ring.classList.contains('exp')){ring.style.width='38px';ring.style.height='38px'}});
+});
+
+(function animCur(){
+  dot.style.left=mx+'px';dot.style.top=my+'px';
+  rx+=(mx-rx)*.1;ry+=(my-ry)*.1;
+  ring.style.left=rx+'px';ring.style.top=ry+'px';
+  requestAnimationFrame(animCur);
+})();
+
+/* ── MAGNETIC ── */
+document.querySelectorAll('.mag').forEach(el=>{
+  el.addEventListener('mousemove',e=>{
+    const r=el.getBoundingClientRect();
+    const dx=(e.clientX-r.left-r.width/2)*.22,dy=(e.clientY-r.top-r.height/2)*.22;
+    el.style.transform=`translate(${dx}px,${dy}px)`;
+  });
+  el.addEventListener('mouseleave',()=>el.style.transform='');
+});
+
+/* ── SCROLL PROGRESS + NAV ── */
+const sp=document.getElementById('sp');
+const nav=document.getElementById('nav');
+window.addEventListener('scroll',()=>{
+  const p=window.scrollY/(document.body.scrollHeight-window.innerHeight)*100;
+  sp.style.width=p+'%';
+  nav.classList.toggle('scrolled',window.scrollY>60);
+},{passive:true});
+
+/* ── NAV ICONS active state ── */
+const navSects=['hero','services','process-wrap','manifesto','portfolio','contact'];
+const navBtns=document.querySelectorAll('.nav-icon-btn');
+window.addEventListener('scroll',()=>{
+  let cur=-1;
+  navSects.forEach((id,i)=>{const el=document.getElementById(id);if(el&&el.getBoundingClientRect().top<window.innerHeight*.6)cur=i;});
+  navBtns.forEach((b,i)=>b.classList.toggle('active',i===Math.max(0,cur-1)));
+},{passive:true});
+
+/* ── HERO CANVAS ── */
+(function(){
+  const c=document.getElementById('hero-canvas');if(!c)return;
+  const ctx=c.getContext('2d');let W,H,t=0,pmx=0,pmy=0;
+  function resize(){W=c.width=c.offsetWidth;H=c.height=c.offsetHeight}
+  resize();new ResizeObserver(resize).observe(c.parentElement);
+  document.addEventListener('mousemove',e=>{pmx=e.clientX/window.innerWidth-.5;pmy=e.clientY/window.innerHeight-.5});
+
+  const stars=Array.from({length:190},()=>({x:Math.random(),y:Math.random(),r:Math.random()*.8+.15,a:Math.random()*.45+.07,ph:Math.random()*Math.PI*2,sp:Math.random()*.002+.0004}));
+  const R=[
+    {r:40,sp:.004,dash:null,op:.92,w:.7},{r:72,sp:-.003,dash:null,op:.75,w:.65},
+    {r:112,sp:.0025,dash:null,op:.6,w:.6},{r:160,sp:-.002,dash:[6,10],op:.46,w:.52},
+    {r:214,sp:.0016,dash:null,op:.34,w:.46},{r:275,sp:-.0013,dash:null,op:.24,w:.4},
+    {r:344,sp:.001,dash:[4,7],op:.16,w:.35},{r:420,sp:-.0008,dash:null,op:.1,w:.3},
+    {r:502,sp:.0006,dash:[3,5],op:.06,w:.25},{r:590,sp:-.0005,dash:null,op:.04,w:.22},
+    {r:685,sp:.0004,dash:[2,4],op:.025,w:.2},
+  ];
+  const O=[
+    {ri:1,ang:.5,sp:.009,r:10,a:.9},{ri:3,ang:2.2,sp:-.006,r:7,a:.75},
+    {ri:5,ang:4.7,sp:.004,r:4.5,a:.6},{ri:7,ang:1.1,sp:-.003,r:3,a:.5},
+    {ri:2,ang:3.6,sp:.007,r:5.5,a:.65},
+  ];
+  function draw(){
+    ctx.clearRect(0,0,W,H);t+=.014;
+    const isMob=W<768;
+    const OX=pmx*28,OY=pmy*18;
+    /* Su mobile il sistema orbitante va in alto a destra, su desktop a destra al centro */
+    const bcx=isMob?W*.75+OX:W*.72+OX;
+    const bcy=isMob?H*.28+OY:H*.5+OY;
+    stars.forEach(s=>{
+      const a=s.a*(.5+.5*Math.sin(t*s.sp*60+s.ph));
+      ctx.beginPath();ctx.arc(s.x*W+OX*.22,s.y*H+OY*.18,s.r,0,Math.PI*2);
+      ctx.fillStyle=`rgba(255,255,255,${a})`;ctx.fill();
+    });
+    const scale=isMob?.55:1;
+    R.forEach(ring=>{
+      ctx.save();ctx.translate(bcx,bcy);ctx.rotate(t*ring.sp);
+      ctx.beginPath();ctx.arc(0,0,ring.r*scale,0,Math.PI*2);
+      ctx.setLineDash(ring.dash||[]);ctx.strokeStyle=`rgba(255,255,255,${ring.op})`;ctx.lineWidth=ring.w;ctx.stroke();ctx.restore();
+    });
+    const ya=.22+.16*Math.sin(t*1.3);
+    ctx.beginPath();ctx.arc(bcx,bcy,R[2].r*scale,0,Math.PI*2);ctx.setLineDash([]);ctx.strokeStyle=`rgba(240,228,74,${ya*.38})`;ctx.lineWidth=.6;ctx.stroke();
+    O.forEach(o=>{
+      o.ang+=o.sp;const rr=R[o.ri].r*scale;
+      for(let i=12;i>=0;i--){
+        const ta=o.ang-o.sp*i*2.2;
+        ctx.beginPath();ctx.arc(bcx+Math.cos(ta)*rr,bcy+Math.sin(ta)*rr,Math.max(o.r*(1-i*.07),0),0,Math.PI*2);
+        ctx.fillStyle=`rgba(255,255,255,${o.a*(1-i*.08)})`;ctx.fill();
+      }
+    });
+    const g=ctx.createRadialGradient(bcx,bcy,0,bcx,bcy,42);g.addColorStop(0,'rgba(255,255,255,.8)');g.addColorStop(1,'transparent');
+    ctx.beginPath();ctx.arc(bcx,bcy,42,0,Math.PI*2);ctx.fillStyle=g;ctx.fill();
+    ctx.beginPath();ctx.arc(bcx,bcy,11,0,Math.PI*2);ctx.fillStyle='#fff';ctx.fill();
+    if(!isMob){
+      [68,124,190,268,358].forEach((r,i)=>{
+        ctx.save();ctx.translate(OX*.4,OY*.3);ctx.rotate(t*(i%2?.0004:-.0003)*(i+1));
+        ctx.beginPath();ctx.arc(0,0,r,0,Math.PI*2);ctx.setLineDash(i%2?[3,5]:[]);ctx.strokeStyle=`rgba(255,255,255,${.18-i*.028})`;ctx.lineWidth=Math.max(.55-i*.05,.18);ctx.stroke();ctx.restore();
+      });
+    }
+    ctx.setLineDash([]);
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+
+/* ── CONTACT CANVAS ── */
+(function(){
+  const c=document.getElementById('cc');if(!c)return;
+  const ctx=c.getContext('2d');let W,H,t=0;
+  function resize(){W=c.width=c.offsetWidth;H=c.height=c.offsetHeight}
+  resize();new ResizeObserver(resize).observe(c.parentElement);
+  const rs=[48,90,140,200,270,350,440];
+  function draw(){
+    ctx.clearRect(0,0,W,H);t+=.007;const cx=W/2,cy=H/2;
+    rs.forEach((r,i)=>{
+      const ang=t*(i%2===0?.28:-.22)*(1+i*.05);
+      ctx.save();ctx.translate(cx,cy);ctx.rotate(ang);ctx.beginPath();ctx.arc(0,0,r,0,Math.PI*2);
+      ctx.setLineDash(i%3?[4,8]:[]);ctx.strokeStyle=`rgba(255,255,255,${.1-i*.01})`;ctx.lineWidth=.62-i*.04;ctx.stroke();ctx.restore();
+    });
+    const pa=.16+.09*Math.sin(t*2);
+    const g=ctx.createRadialGradient(cx,cy,0,cx,cy,rs[2]);g.addColorStop(0,`rgba(240,228,74,${pa*.18})`);g.addColorStop(1,'transparent');
+    ctx.beginPath();ctx.arc(cx,cy,rs[2],0,Math.PI*2);ctx.fillStyle=g;ctx.fill();
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+
+/* ── TEXT SCRAMBLE ── */
+(function(){
+  const el=document.getElementById('scramble-title');if(!el)return;
+  const target='Il web';const chars='!<>-_\\/[]{}—=+*^?#█▓▒░';
+  let frame=0,queue=[];
+  function rnd(n){return Math.floor(Math.random()*n)}
+  function update(){
+    let out='',done=0;
+    queue.forEach(o=>{
+      if(frame>=o.end){out+=o.to;done++;}
+      else if(frame>=o.start){o.char=chars[rnd(chars.length)];out+=`<span style="opacity:.2">${o.char}</span>`;}
+      else out+=o.from;
+    });
+    el.innerHTML=out;
+    if(done<queue.length){frame++;requestAnimationFrame(update);}
+  }
+  setTimeout(()=>{
+    queue=target.split('').map((to,i)=>({from:' ',to,start:rnd(16)+i*2,end:rnd(10)+i*2+18,char:''}));
+    update();
+  },300);
+})();
+
+/* ── HORIZONTAL SCROLL processo ── */
+(function(){
+  const wrap=document.getElementById('process-wrap');
+  const track=document.getElementById('ptrack');
+  const pbar=document.getElementById('pbar');
+  if(!wrap||!track)return;
+  function update(){
+    const rect=wrap.getBoundingClientRect();
+    const total=wrap.offsetHeight-window.innerHeight;
+    const progress=Math.min(Math.max(0,-rect.top/total),1);
+    const maxShift=track.scrollWidth-window.innerWidth+96;
+    track.style.transform=`translateX(${-progress*maxShift}px)`;
+    if(pbar)pbar.style.width=(progress*100)+'%';
+  }
+  window.addEventListener('scroll',update,{passive:true});
+  update();
+})();
+
+/* ── SCROLL REVEAL ── */
+const ro=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');ro.unobserve(e.target)}})},{threshold:.07});
+document.querySelectorAll('.rv').forEach(el=>ro.observe(el));
+
+/* manifesto clip-path con stagger */
+const mObs=new IntersectionObserver(es=>{
+  es.forEach(e=>{
+    if(e.isIntersecting){
+      e.target.querySelectorAll('.m-pt').forEach((p,i)=>setTimeout(()=>p.classList.add('in'),i*160));
+      const h=e.target.querySelector('.manifesto-h2');if(h)setTimeout(()=>h.classList.add('in'),200);
+      mObs.unobserve(e.target);
+    }
+  });
+},{threshold:.1});
+const mEl=document.getElementById('manifesto');if(mEl)mObs.observe(mEl);
+
+/* ── COUNTER ── */
+function countUp(el,target,dur=1500){
+  const s=performance.now();
+  function step(now){const p=Math.min((now-s)/dur,1),e=1-Math.pow(1-p,3);el.textContent=Math.round(target*e);if(p<1)requestAnimationFrame(step)}
+  requestAnimationFrame(step);
+}
+const co=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){countUp(e.target,+e.target.dataset.target);co.unobserve(e.target)}})},{threshold:.4});
+document.querySelectorAll('.count').forEach(el=>co.observe(el));
+
+/* ── BENTO 3D TILT ── */
+document.querySelectorAll('.bento-card').forEach(card=>{
+  card.addEventListener('mousemove',e=>{
+    const r=card.getBoundingClientRect();
+    const x=(e.clientX-r.left)/r.width-.5,y=(e.clientY-r.top)/r.height-.5;
+    card.style.transform=`perspective(800px) rotateY(${x*5}deg) rotateX(${-y*5}deg) translateZ(3px)`;
+    card.style.setProperty('--mx',((e.clientX-r.left)/r.width*100)+'%');
+    card.style.setProperty('--my',((e.clientY-r.top)/r.height*100)+'%');
+  });
+  card.addEventListener('mouseleave',()=>card.style.transform='');
+});
+
+/* ── BOTTOM NAV active ── */
+const bsects=['hero','services','portfolio','contact'];
+const bnitems=document.querySelectorAll('.bn-item');
+const bsels=bsects.map(id=>document.getElementById(id));
+window.addEventListener('scroll',()=>{
+  let cur=0;bsels.forEach((s,i)=>{if(s&&s.getBoundingClientRect().top<window.innerHeight*.5)cur=i});
+  bnitems.forEach((it,i)=>it.classList.toggle('active',i===cur));
+},{passive:true});
+</script>
+</body>
+</html>
