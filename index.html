@@ -46,19 +46,14 @@ body{
 }
 
 /* ══════════════════════════════════════
-   NAV — mobile: logo + cta pill
+   NAV TOP — solo logo, minimal, no fixed
+   Su mobile la navigazione è tutta nella bottom nav
 ══════════════════════════════════════ */
 nav{
-  position:fixed;top:0;left:0;right:0;z-index:1000;
+  position:absolute;
+  top:0;left:0;right:0;z-index:100;
   display:flex;align-items:center;justify-content:space-between;
-  padding:16px 20px;
-  transition:background .4s,backdrop-filter .4s;
-}
-nav.scrolled{
-  background:rgba(0,0,0,.85);
-  backdrop-filter:blur(20px);
-  -webkit-backdrop-filter:blur(20px);
-  border-bottom:1px solid var(--faint);
+  padding:20px 20px;
 }
 .nav-logo img{
   height:24px;
@@ -70,12 +65,12 @@ nav.scrolled{
   text-transform:uppercase;color:#000;background:#fff;
   padding:9px 20px;border-radius:100px;
   text-decoration:none;
-  transition:background .25s,color .25s,transform .25s;
+  transition:background .25s,color .25s;
   white-space:nowrap;
 }
-.nav-cta:active{transform:scale(.96)}
+.nav-cta:active{opacity:.85}
 
-/* ── desktop nav icons ── */
+/* nav icons — solo desktop */
 .nav-icons{display:none}
 
 /* ══════════════════════════════════════
@@ -88,7 +83,7 @@ nav.scrolled{
   display:flex;
   flex-direction:column;
   justify-content:flex-end;
-  padding:100px 20px 120px;
+  padding:80px 20px 120px;
   overflow:hidden;
   background:
     radial-gradient(ellipse 80% 50% at 70% 20%, rgba(255,255,255,.04) 0%, transparent 60%),
@@ -538,13 +533,24 @@ body::after{
 ══════════════════════════════════════ */
 @media(min-width:768px){
 
-  /* NAV */
-  nav{padding:24px 48px}
+  /* NAV desktop — fixed con blur */
+  nav{
+    position:fixed;top:0;left:0;right:0;z-index:1000;
+    padding:24px 48px;
+    transition:background .4s,backdrop-filter .4s,padding .3s;
+  }
+  nav.scrolled{
+    background:rgba(0,0,0,.85);
+    backdrop-filter:blur(20px);
+    -webkit-backdrop-filter:blur(20px);
+    border-bottom:1px solid var(--faint);
+    padding:16px 48px;
+  }
   .nav-logo img{height:26px}
+  .nav-cta:hover{background:var(--y);transform:translateY(-2px);box-shadow:0 8px 24px rgba(255,255,255,.12)}
   .nav-icons{
     display:flex;gap:6px;align-items:center;
   }
-  .nav-icon-btn{
     width:38px;height:38px;display:flex;align-items:center;justify-content:center;
     border-radius:8px;text-decoration:none;
     transition:background .25s;
